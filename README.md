@@ -1,4 +1,4 @@
-Example Code in Snorkeling in Verilog Bay
+Example Codes in Snorkeling in Verilog Bay
 
 Chapter 3: combination logic with assign
 
