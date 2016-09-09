@@ -1,0 +1,153 @@
+/***********************************************
+Module Name:   Line_sin_0_90_frame
+Feature:       Approx. sin function by lines
+               Frame only for calling by generater 
+               (DO NOT modify the file)
+               to create the .v file
+               An example for the book
+Coder:         Garfield
+Organization:  xxxx Group, Department of Architecture
+------------------------------------------------------
+Input ports:   clk: System clock
+               Reset: System reset
+               address: angle value displayed by address
+                        (0 for 0 degree, maximum for 90 degree)
+Output Ports:  vlaue: DDS output value, signed
+------------------------------------------------------
+History:
+03-11-2016: First Version by Garfield
+03-11-2016: Verified by Line_sin_0_90_test
+***********************************************/
+
+module line_sin_0_90
+#(parameter ADDRESS_WIDTH = 8,
+//Bit width for phase counter and step 
+parameter VALUE_WIDTH = 8
+//Output value's bit width
+)
+  ( 
+    input CLK,
+    input RESET,
+    input[ADDRESS_WIDTH - 1 - 1: 0] address,
+    output reg[VALUE_WIDTH - 1 - 1 : 0] value
+  );
+
+//Defination for Varables in the module
+integer loop;
+//Loop variable
+
+reg[ADDRESS_WIDTH - 1 - 2: 0] intra_address;
+//Intra address for calculation
+//Change 90 degree to 111....111
+//Cut the MSB
+reg[ADDRESS_WIDTH - 1 - 2: 0] intra_address_delay;
+//Delay for ceofficients selelction
+
+reg[VALUE_WIDTH - 1 : 0] ceo_a;
+//Fixed point 1.VALUE_WIDTH
+reg[VALUE_WIDTH - 2 : 0] ceo_b;
+//Fixed point 0.VALUE_WIDTH
+//Ceofficients for the lines
+
+wire[VALUE_WIDTH - 1 + 1 + ADDRESS_WIDTH - 2 - 1: 0] long_value;
+//Long function value without truncation
+//Lenght: a * address
+wire[VALUE_WIDTH:0] short_value;
+//Truncation value
+
+//definition JUDGEMENTS and Ceofficients Constant
+//Application part: Insert DEFINITION OF JUDGEMENTS and Ceofficients Constant(DO NOT REMOVE!)
+
+//Logicals
+//Costant Tables
+//Application part: Insert Constant Tables (DO NOT REMOVE!)
+
+//Value calculation on the line
+assign long_value = ceo_a * intra_address_delay;
+assign short_value = 
+        long_value[VALUE_WIDTH - 1 + 1 + ADDRESS_WIDTH - 2 - 1 : ADDRESS_WIDTH - 2]
+           +{1'b0, ceo_b};
+
+always @ (posedge CLK or negedge RESET)
+//Address adjust: 90 degree operation
+begin
+    if (!RESET)
+    //Reset enable
+    begin
+        intra_address <= {(ADDRESS_WIDTH - 1){1'b0}};
+    end
+    else
+    begin
+        if (address[ADDRESS_WIDTH - 1 -1])
+        //90 degree
+        begin
+            intra_address <= {(ADDRESS_WIDTH - 2){1'b1}};
+            //To 111...111
+        end
+        else
+        begin
+            intra_address <= address[ADDRESS_WIDTH - 1 - 2: 0]; 
+            //Keep original value       	
+        end
+    end
+end
+
+always @ (posedge CLK or negedge RESET)
+//Address delay: waiting for ceofficients selection
+begin
+    if (!RESET)
+    //Reset enable
+    begin
+        intra_address_delay <= {(ADDRESS_WIDTH - 1){1'b0}};
+    end
+    else
+    begin
+        intra_address_delay <= intra_address;
+    end
+end
+
+always @ (posedge CLK or negedge RESET)
+//Ceofficients selection
+begin
+    if (!RESET)
+    //Reset enable
+    begin
+        ceo_a <= {(VALUE_WIDTH + 1){1'b0}};
+        ceo_b <= {(VALUE_WIDTH ){1'b0}};
+    end
+    else
+    begin
+        case(judgements)
+//Application part: Insert Ceofficient Selection codes (DO NOT REMOVE!)        	
+        	
+        	default:
+        	begin
+        	   ceo_a <= {(VALUE_WIDTH + 1){1'b0}};
+               ceo_b <= {(VALUE_WIDTH ){1'b0}}; 
+        	end
+        endcase
+    end
+end
+
+always @ (posedge CLK or negedge RESET)
+//Function value output
+begin
+    if (!RESET)
+    //Reset enable
+    begin
+        value <= {(VALUE_WIDTH - 1){1'b0}};
+    end
+    else
+    begin
+        value <= short_value[VALUE_WIDTH - 1 : 0];
+        //Truncation: MSB and tails
+    end
+end
+
+//Judgement for which line here is
+always @(*)
+begin
+//Application part: Insert Comparisons (DO NOT REMOVE!)
+end
+
+endmodule

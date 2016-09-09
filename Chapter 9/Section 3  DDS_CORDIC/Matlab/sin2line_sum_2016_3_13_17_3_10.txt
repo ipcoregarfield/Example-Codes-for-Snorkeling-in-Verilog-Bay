@@ -1,0 +1,15 @@
+Report: Line approx. sin function
+Address_Width = 6 
+Value_Width = 7 
+#line = 14 
+Maximum Error Value for float method = 1.868252e-02 
+Maximum Error Value between float method and fixed point = 1.088134e-02 
+Maximum Error Value in total = 1.259648e-02 
+Crossing point between lines
+3 5 7 9 b d f 12 15 19 23 2f 3c 40 
+Ceofficient a
+c8 c7 c6 c5 c3 c1 be b9 b3 ab 96 6c 34 a 
+Ceofficient b
+0 1 1 1 1 1 2 3 5 7 f 26 4f 76 
+Calculation Values per address
+0 3 6 a d 10 13 16 19 1c 1f 22 25 28 2b 2e 31 34 37 3a 3c 3f 41 44 47 49 4b 4e 50 52 55 57 5a 5c 5e 61 62 64 66 67 69 6b 6c 6e 70 71 73 75 76 76 77 78 79 7a 7a 7b 7c 7d 7e 7e 7f 7f 7f 7f 

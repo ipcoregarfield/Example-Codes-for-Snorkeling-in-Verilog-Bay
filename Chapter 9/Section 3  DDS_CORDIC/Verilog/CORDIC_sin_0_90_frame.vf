@@ -1,0 +1,77 @@
+/***********************************************
+Module Name:   CORDIC_sin_0_90_frame
+Feature:       Approx. sin function by CORDIC
+               Frame only for calling by generater 
+               (DO NOT modify the file)
+               to create the .v file
+               An example for the book
+Coder:         Garfield
+Organization:  xxxx Group, Department of Architecture
+------------------------------------------------------
+Input ports:   clk: System clock
+               Reset: System reset
+               address: angle value displayed by address
+                        (0 for 0 degree, maximum for 90 degree)
+Output Ports:  vlaue: DDS output value, signed
+------------------------------------------------------
+History:
+03-19-2016: First Version by Garfield
+03-19-2016: Verified by CORDIC_sin_0_90_test
+***********************************************/
+
+module CORDIC_sin_0_90
+//definition parameters
+//Application part: Insert parameters(DO NOT REMOVE!)
+  ( 
+    input CLK,
+    input RESET,
+    input[ADDRESS_WIDTH - 1 - 1: 0] address,
+    output reg[VALUE_WIDTH - 1 - 1 : 0] value
+  );
+
+//Defination for Varables in the module
+reg [ADDRESS_WIDTH - 2 - 1: 0] intra_address;
+//definition wire varables to connect the CORDIC elements
+//Application part: Insert wire varables (DO NOT REMOVE!)
+
+//Insert CORDIC element modules
+//Application part: Insert CORDIC element modules (DO NOT REMOVE!)
+
+//Intra address operation
+always @ (posedge CLK or negedge RESET)
+//Address adjust: 90 degree operation
+begin
+    if (!RESET)
+    //Reset enable
+    begin
+        intra_address <= {(ADDRESS_WIDTH - 1){1'b0}};
+    end
+    else
+    begin
+        if (address[ADDRESS_WIDTH - 1 -1])
+        //90 degree
+        begin
+            intra_address <= {(ADDRESS_WIDTH - 2){1'b1}};
+            //To 111...111
+        end
+        else
+        begin
+            intra_address <= address[ADDRESS_WIDTH - 1 - 2: 0]; 
+            //Keep original value       	
+        end
+    end
+end
+always @(posedge CLK or negedge RESET)
+begin
+    if (!RESET)
+    begin
+        value <= {(VALUE_WIDTH - 1){1'b0}};
+    end
+    else
+    begin
+    //Truncate for output
+    //Application part: Insert Truncation (DO NOT REMOVE!)
+    end
+end
+
+endmodule
